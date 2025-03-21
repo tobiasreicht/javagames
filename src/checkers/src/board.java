@@ -51,10 +51,25 @@ public class board {
 
         // Normale Bewegungen (ein Feld diagonal)
         if (Math.abs(rowDiff) == 1 && colDiff == 1) {
-            return true;
+            if (player == 1 || player == 3) { // Spieler 1 oder König von Spieler 1
+                if (rowDiff == 1) { // Nur nach unten
+                    return true;
+                }
+            } else if (player == 2 || player == 4) { // Spieler 2 oder König von Spieler 2
+                if (rowDiff == -1) { // Nur nach oben
+                    return true;
+                }
+            }
         }
 
-        // Sprünge über Gegnerstein (zwei Felder diagonal)
+        // Bewegungen für Könige (ein Feld diagonal in alle Richtungen)
+        if (player == 3 || player == 4) { // König von Spieler 1 oder Spieler 2
+            if (Math.abs(rowDiff) == 1 && colDiff == 1) {
+                return true;
+            }
+        }
+
+        // Schlagen von Gegnersteinen (zwei Felder diagonal)
         if (Math.abs(rowDiff) == 2 && colDiff == 2) {
             int middleRow = (fromRow + toRow) / 2;
             int middleCol = (fromCol + toCol) / 2;
