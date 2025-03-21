@@ -1,4 +1,8 @@
 package checkers.src;
+
+import java.util.List;
+import java.util.ArrayList;
+
 public class board {
 
     private int[][] board;
@@ -45,31 +49,18 @@ public class board {
         int rowDiff = toRow - fromRow;
         int colDiff = Math.abs(toCol - fromCol);
 
-        // Normale Bewegungen
-        if (player == 1) {
-            if (rowDiff == 1 && colDiff == 1) {
-                return true;
-            }
-        } else if (player == 2) {
-            if (rowDiff == -1 && colDiff == 1) {
-                return true;
-            }
+        // Normale Bewegungen (ein Feld diagonal)
+        if (Math.abs(rowDiff) == 1 && colDiff == 1) {
+            return true;
         }
 
-
-        if (player == 3 || player == 4) { // König von Spieler 1 oder Spieler 2
-                if (Math.abs(rowDiff) == 1 && colDiff == 1) {
-                    return true;
-                }
-            }
-
-        // Schlagen von Gegnersteinen
+        // Sprünge über Gegnerstein (zwei Felder diagonal)
         if (Math.abs(rowDiff) == 2 && colDiff == 2) {
             int middleRow = (fromRow + toRow) / 2;
             int middleCol = (fromCol + toCol) / 2;
             int middlePiece = board[middleRow][middleCol];
 
-            if (middlePiece != 0 && middlePiece != player) {
+            if (middlePiece != 0 && middlePiece != player && middlePiece != player + 2) {
                 return true;
             }
         }
@@ -147,5 +138,46 @@ public class board {
             }
         }
         return false; // Keine gültigen Züge gefunden
+    }
+
+    public List<int[]> getPossibleMoves(int row, int col) {
+        List<int[]> possibleMoves = new ArrayList<>();
+        int player = board[row][col];
+
+        // Mögliche Richtungen für normale Spieler und Könige
+        int[][] directions;
+        if (player == 1 || player == 3) { // Spieler 1 oder König von Spieler 1
+            directions = new int[][]{{1, -1}, {1, 1}}; // Nach unten
+        } else if (player == 2 || player == 4) { // Spieler 2 oder König von Spieler 2
+            directions = new int[][]{{-1, -1}, {-1, 1}}; // Nach oben
+        } else {
+            return possibleMoves; // Ungültiger Spieler
+        }
+
+        // Füge Richtungen für Könige hinzu (falls zutreffend)
+        if (player == 3 || player == 4) { // König
+            directions = new int[][]{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}; // Alle vier Richtungen
+        }
+
+        // Überprüfe alle möglichen Züge (einfache Bewegungen und Sprünge)
+        for (int[] dir : directions) {
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+
+            // Einfache Bewegung (ein Feld diagonal)
+            if (isValidMove(row, col, newRow, newCol)) {
+                possibleMoves.add(new int[]{newRow, newCol});
+            }
+
+            // Sprung über Gegnerstein (zwei Felder diagonal)
+            int jumpRow = row + 2 * dir[0];
+            int jumpCol = col + 2 * dir[1];
+
+            if (isValidMove(row, col, jumpRow, jumpCol)) {
+                possibleMoves.add(new int[]{jumpRow, jumpCol});
+            }
+        }
+
+        return possibleMoves;
     }
 }

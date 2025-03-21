@@ -1,12 +1,10 @@
 package checkers.src;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class GameState extends BasicGameState {
@@ -15,9 +13,8 @@ public class GameState extends BasicGameState {
     private board gameBoard;
     private Resources resources;
     private int selectedRow = -1, selectedCol = -1;
-    private int currentPlayer = 1; // 1 für Spieler 1 (Rot), 2 für Spieler 2 (Schwarz)
+    private int currentPlayer = 2; // 1 für Spieler 1 (schwarz), 2 für Spieler 2 (weiß)
 
-    // ... (restlicher Code)
     public GameState() {
         this.stateID = 1; // ID für den Spielzustand
     }
@@ -39,7 +36,17 @@ public class GameState extends BasicGameState {
         // Rendern des Spielbretts und der Spielsteine
         renderBoard(g);
         renderPieces(g);
-        renderSelection(g);
+
+        // Rendern der Auswahl (gelber Rahmen um den ausgewählten Spielstein)
+        if (selectedRow != -1 && selectedCol != -1) {
+            g.setColor(Color.darkGray);
+            g.setLineWidth(5); // Dicke des Rahmens
+            g.drawRect(selectedCol * 128, selectedRow * 128, 128, 128);
+
+            // Rendern der möglichen Züge (grüne Rahmen um die möglichen Felder)
+            renderPossibleMoves(g, selectedRow, selectedCol);
+
+        }
     }
 
     @Override
@@ -152,6 +159,19 @@ public class GameState extends BasicGameState {
         } else if (!player2HasMoves || !player2HasPieces) {
             System.out.println("Spieler 1 gewinnt! Spieler 2 hat keine Züge oder Steine mehr.");
             // Hier kannst du das Spiel beenden oder einen Gewinnerbildschirm anzeigen
+        }
+    }
+
+    private void renderPossibleMoves(Graphics g, int selectedRow, int selectedCol) {
+        List<int[]> possibleMoves = gameBoard.getPossibleMoves(selectedRow, selectedCol);
+
+        g.setColor(org.newdawn.slick.Color.green); // Farbe für die Markierung
+        g.setLineWidth(3); // Dicke des Rahmens
+
+        for (int[] move : possibleMoves) {
+            int row = move[0];
+            int col = move[1];
+            g.drawRect(col * 128, row * 128, 128, 128); // Zeichne einen Rahmen um das Feld
         }
     }
 }

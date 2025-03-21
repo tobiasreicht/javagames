@@ -11,7 +11,7 @@ public class game extends BasicGame {
     private TiledMap map;
     private List<Enemy> enemies;
     private Image enemyImage;
-    private int enemyCount = 1; // Anzahl der Gegner
+    private int enemyCount = 0; // Anzahl der Gegner
     private boolean gameOver = false;
 
     private float cameraX, cameraY;  // Kamera-Offset
@@ -135,6 +135,7 @@ public class game extends BasicGame {
                 y + playerHeight > enemyY;
     }
 
+
     // Methode zur Überprüfung, ob sich der Gegner mit dem Spieler überschneidet
     private boolean isOverlappingWithPlayer(float enemyX, float enemyY) {
         float playerWidth = cinimini.getWidth();
@@ -162,7 +163,7 @@ public class game extends BasicGame {
 
         // Zeichne den Spieler (unter Berücksichtigung des Kamera-Offsets)
         graphics.drawImage(cinimini, x - cameraX, y - cameraY);
-        graphics.drawString("Welcome to Cininimi Runner", 500, 50);
+        graphics.drawString("escape the zombie🧟", 500, 50);
 
         // Zeichne Gegner (unter Berücksichtigung des Kamera-Offsets)
         for (Enemy enemy : enemies) {

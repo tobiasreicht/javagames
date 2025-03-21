@@ -20,6 +20,9 @@ public class Main extends StateBasedGame {
         try {
             AppGameContainer app = new AppGameContainer(new Main("Checkers"));
             app.setDisplayMode(1024, 1024, false);
+            app.setTargetFrameRate(60);
+            app.setShowFPS(false);
+            app.setVSync(true);
             app.start();
         } catch (SlickException e) {
             e.printStackTrace();
